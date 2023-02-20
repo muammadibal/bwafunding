@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bwafunding/auth"
 	"bwafunding/handler"
 	"bwafunding/user"
 	"log"
@@ -23,9 +24,12 @@ func main() {
 	// db.AutoMigrate(&campaign.CampaignImage{})
 	// db.AutoMigrate(&transaction.Transaction{})
 
+	authService := auth.AssignService()
+
 	userRepository := user.AssignRepository(db)
 	userService := user.AssignService(userRepository)
-	userHandler := handler.AssignUserHandler(userService)
+	userHandler := handler.AssignUserHandler(userService, authService)
+
 	// userInput := user.RegisterUserInput{}
 	// userInput.Name = "test lagi"
 	// userInput.Email = "test@example.com"
