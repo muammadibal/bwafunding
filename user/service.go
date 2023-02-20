@@ -10,6 +10,7 @@ type Service interface {
 	Register(input RegisterUserInput) (User, error)
 	Login(input LoginUserInput) (User, error)
 	CheckAvailabilityEmail(input CheckEmailInput) (bool, error)
+	UploadAvatar(ID int, fileLocation string) (User, error)
 }
 
 type service struct {
@@ -82,4 +83,19 @@ func (s *service) CheckAvailabilityEmail(input CheckEmailInput) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (s *service) UploadAvatar(ID int, fileLocation string) (User, error) {
+	user, err := s.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	user.AvatarFileName = fileLocation
+	userData, err := s.repository.Update(user)
+	if err != nil {
+		return userData, err
+	}
+
+	return userData, nil
 }

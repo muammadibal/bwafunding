@@ -26,7 +26,6 @@ func main() {
 	userRepository := user.AssignRepository(db)
 	userService := user.AssignService(userRepository)
 	userHandler := handler.AssignUserHandler(userService)
-
 	// userInput := user.RegisterUserInput{}
 	// userInput.Name = "test lagi"
 	// userInput.Email = "test@example.com"
@@ -44,6 +43,7 @@ func main() {
 	apiV1.POST("/users/sign-up", userHandler.Register)
 	apiV1.POST("/users/sign-in", userHandler.Login)
 	apiV1.POST("/users/email_checkers", userHandler.CheckAvailabilityEmail)
+	apiV1.POST("/users/upload_avatar", userHandler.UploadAvatar)
 	apiV1.GET("/users/fetch", userHandler.FetchUser)
 
 	router.Run()
