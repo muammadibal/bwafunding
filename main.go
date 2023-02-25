@@ -46,7 +46,7 @@ func main() {
 	// db.Find(&users)
 
 	router := gin.Default()
-
+	router.Static("/images", "./images")
 	apiV1 := router.Group("/api/v1")
 	apiV1.POST("/users/sign-up", userHandler.Register)
 	apiV1.POST("/users/sign-in", userHandler.Login)

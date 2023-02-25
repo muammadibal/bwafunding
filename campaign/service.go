@@ -4,7 +4,7 @@ import "errors"
 
 type Service interface {
 	Campaigns(userID int) ([]Campaign, error)
-	CampaignDetail(ID int) (Campaign, error)
+	CampaignDetail(ID CampaignDetailInput) (Campaign, error)
 }
 
 type service struct {
@@ -33,8 +33,8 @@ func (s *service) Campaigns(userID int) ([]Campaign, error) {
 	return campaigns, nil
 }
 
-func (s *service) CampaignDetail(ID int) (Campaign, error) {
-	campaign, err := s.repository.FindByID(ID)
+func (s *service) CampaignDetail(input CampaignDetailInput) (Campaign, error) {
+	campaign, err := s.repository.FindByID(input.ID)
 	if err != nil {
 		return campaign, err
 	}

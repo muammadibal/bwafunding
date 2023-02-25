@@ -38,15 +38,23 @@ func (h *campaignHandler) Campaigns(c *gin.Context) {
 }
 
 func (h *campaignHandler) CampaignsDetail(c *gin.Context) {
-	ID, _ := strconv.Atoi(c.Param("id"))
-	campaignData, err := h.service.CampaignDetail(ID)
+	// ID, _ := strconv.Atoi(input.ID)
+	var input campaign.CampaignDetailInput
+	err := c.ShouldBindUri(&input)
 	if err != nil {
-		response := helper.APIResponse("Error get campaign", http.StatusBadRequest, "error", nil)
+		response := helper.APIResponse("Error get detail campaign", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	formatter := campaign.FormatCampaign(campaignData)
-	response := helper.APIResponse("Success get campaign", http.StatusOK, "success", formatter)
+
+	campaignData, err := h.service.CampaignDetail(input)
+	if err != nil {
+		response := helper.APIResponse("Error get detail campaign", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	formatter := campaign.FormatCampaignDetail(campaignData)
+	response := helper.APIResponse("Success get detail campaign", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 }

@@ -1,6 +1,9 @@
 package campaign
 
-import "time"
+import (
+	"bwafunding/user"
+	"time"
+)
 
 type Campaign struct {
 	ID               int
@@ -15,6 +18,7 @@ type Campaign struct {
 	Slug             string `gorm:"type:varchar(255)"`
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	User             user.User
 	CampaignImages   []CampaignImage
 }
 
