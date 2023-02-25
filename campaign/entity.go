@@ -4,7 +4,7 @@ import "time"
 
 type Campaign struct {
 	ID               int
-	UserId           int32
+	UserID           int32
 	Name             string `gorm:"type:varchar(255)"`
 	ShortDescription string `gorm:"type:varchar(255)"`
 	Description      string

@@ -31,20 +31,22 @@ func (h *campaignHandler) Campaigns(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("Success get campaigns", http.StatusOK, "success", campaigns)
+	formatter := campaign.FormatCampaigns(campaigns)
+	response := helper.APIResponse("Success get campaigns", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *campaignHandler) CampaignsDetail(c *gin.Context) {
 	ID, _ := strconv.Atoi(c.Param("id"))
-	campaign, err := h.service.CampaignDetail(ID)
+	campaignData, err := h.service.CampaignDetail(ID)
 	if err != nil {
 		response := helper.APIResponse("Error get campaign", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("Success get campaign", http.StatusOK, "success", campaign)
+	formatter := campaign.FormatCampaign(campaignData)
+	response := helper.APIResponse("Success get campaign", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 }
