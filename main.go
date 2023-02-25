@@ -33,10 +33,8 @@ func main() {
 	userHandler := handler.AssignUserHandler(userService, authService)
 
 	campaignRepository := campaign.AssignRepository(db)
-	campaigns, err := campaignRepository.FindAll()
-	fmt.Println(campaigns)
-	// userService := user.AssignService(userRepository)
-	// userHandler := handler.AssignUserHandler(userService, authService)
+	campaignService := campaign.AssignService(campaignRepository)
+	campaigns, _ := campaignService.Campaigns(0)
 
 	// userInput := user.RegisterUserInput{}
 	// userInput.Name = "test lagi"
@@ -48,7 +46,7 @@ func main() {
 	// var users []user.User
 	// db.Find(&users)
 
-	// fmt.Println(users)
+	fmt.Println(campaigns)
 	router := gin.Default()
 
 	apiV1 := router.Group("/api/v1")
