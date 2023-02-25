@@ -7,13 +7,15 @@ type Campaign struct {
 	UserId           int32
 	Name             string `gorm:"type:varchar(255)"`
 	ShortDescription string `gorm:"type:varchar(255)"`
-	Description      string `gorm:"type:varchar(255)"`
+	Description      string
 	Perks            string `gorm:"type:varchar(255)"`
 	BackerAmount     int32
 	GoalAmount       int32
 	CurrentAmount    int32
+	Slug             string `gorm:"type:varchar(255)"`
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	CampaignImages   []CampaignImage
 }
 
 type CampaignImage struct {

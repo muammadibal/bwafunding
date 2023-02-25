@@ -2,8 +2,10 @@ package main
 
 import (
 	"bwafunding/auth"
+	"bwafunding/campaign"
 	"bwafunding/handler"
 	"bwafunding/user"
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -29,6 +31,12 @@ func main() {
 	userRepository := user.AssignRepository(db)
 	userService := user.AssignService(userRepository)
 	userHandler := handler.AssignUserHandler(userService, authService)
+
+	campaignRepository := campaign.AssignRepository(db)
+	campaigns, err := campaignRepository.FindAll()
+	fmt.Println(campaigns)
+	// userService := user.AssignService(userRepository)
+	// userHandler := handler.AssignUserHandler(userService, authService)
 
 	// userInput := user.RegisterUserInput{}
 	// userInput.Name = "test lagi"
