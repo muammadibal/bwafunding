@@ -5,7 +5,6 @@ import (
 	"bwafunding/campaign"
 	"bwafunding/handler"
 	"bwafunding/user"
-	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +33,7 @@ func main() {
 
 	campaignRepository := campaign.AssignRepository(db)
 	campaignService := campaign.AssignService(campaignRepository)
-	campaigns, _ := campaignService.Campaigns(0)
+	campaignHandler := handler.AssignCampaignHandler(campaignService)
 
 	// userInput := user.RegisterUserInput{}
 	// userInput.Name = "test lagi"
@@ -46,7 +45,6 @@ func main() {
 	// var users []user.User
 	// db.Find(&users)
 
-	fmt.Println(campaigns)
 	router := gin.Default()
 
 	apiV1 := router.Group("/api/v1")
@@ -55,6 +53,8 @@ func main() {
 	apiV1.POST("/users/email_checkers", userHandler.CheckAvailabilityEmail)
 	apiV1.POST("/users/upload_avatar", handler.AuthMiddleware(authService, userService), userHandler.UploadAvatar)
 	apiV1.GET("/users/fetch", userHandler.FetchUser)
+	apiV1.GET("/campaigns", campaignHandler.Campaigns)
+	apiV1.GET("/campaigns/:id", campaignHandler.CampaignsDetail)
 
 	router.Run()
 }
