@@ -35,6 +35,21 @@ func main() {
 	campaignService := campaign.AssignService(campaignRepository)
 	campaignHandler := handler.AssignCampaignHandler(campaignService)
 
+	// input := campaign.CampaignCreateInput{}
+	// input.Name = "Penggalangan Dana Startup"
+	// input.ShortDescription = "short"
+	// input.Description = "loooonnngggg"
+	// input.GoalAmount = 1000000000
+	// input.Perks = "hadiah satu, dua, dan tiga"
+
+	// inputUser, _ := userService.UserDetail(5)
+	// input.User = inputUser
+	// inputSave, err := campaignService.CreateCampaign(input)
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+	// fmt.Println(inputSave)
+
 	// userInput := user.RegisterUserInput{}
 	// userInput.Name = "test lagi"
 	// userInput.Email = "test@example.com"
@@ -53,6 +68,7 @@ func main() {
 	apiV1.POST("/users/email_checkers", userHandler.CheckAvailabilityEmail)
 	apiV1.POST("/users/upload_avatar", handler.AuthMiddleware(authService, userService), userHandler.UploadAvatar)
 	apiV1.GET("/users/fetch", userHandler.FetchUser)
+	apiV1.POST("/campaigns", handler.AuthMiddleware(authService, userService), campaignHandler.CreateCampaign)
 	apiV1.GET("/campaigns", campaignHandler.Campaigns)
 	apiV1.GET("/campaigns/:id", campaignHandler.CampaignsDetail)
 

@@ -3,6 +3,8 @@ package handler
 import (
 	"bwafunding/campaign"
 	"bwafunding/helper"
+	"bwafunding/user"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -21,6 +23,31 @@ type campaignHandler struct {
 
 func AssignCampaignHandler(service campaign.Service) *campaignHandler {
 	return &campaignHandler{service}
+}
+
+func (h *campaignHandler) CreateCampaign(c *gin.Context) {
+	var input campaign.CampaignCreateInput
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.ValidationError(err)
+		errorMessage := gin.H{"error": errors}
+
+		response := helper.APIResponse("Error create campaigns", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	fmt.Println("raw current user", c.MustGet("currentUser"))
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+	campaignData, err := h.service.CreateCampaign(input)
+	if err != nil {
+		response := helper.APIResponse("Error create campaigns", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	response := helper.APIResponse("Success create campaign", http.StatusOK, "success", campaign.FormatCampaignDetail(campaignData))
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (h *campaignHandler) Campaigns(c *gin.Context) {
