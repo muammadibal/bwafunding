@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Repository interface {
 	Save(campaign Campaign) (Campaign, error)
+	Update(campaign Campaign) (Campaign, error)
 	FindAll() ([]Campaign, error)
 	FindByUserID(userID int) ([]Campaign, error)
 	FindByID(ID int) (Campaign, error)
@@ -18,6 +19,15 @@ func AssignRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) Save(campaign Campaign) (Campaign, error) {
+	err := r.db.Create(&campaign).Error
+	if err != nil {
+		return campaign, err
+	}
+
+	return campaign, nil
+}
+
+func (r *repository) Update(campaign Campaign) (Campaign, error) {
 	err := r.db.Save(&campaign).Error
 	if err != nil {
 		return campaign, err

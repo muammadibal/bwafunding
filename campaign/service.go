@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	CreateCampaign(input CampaignCreateInput) (Campaign, error)
+	UpdateCampaign(ID CampaignDetailInput, input CampaignCreateInput) (Campaign, error)
 	Campaigns(userID int) ([]Campaign, error)
 	CampaignDetail(ID CampaignDetailInput) (Campaign, error)
 }
@@ -29,12 +30,39 @@ func (s *service) CreateCampaign(input CampaignCreateInput) (Campaign, error) {
 	campaign.Perks = input.Perks
 	campaign.GoalAmount = input.GoalAmount
 	campaign.UserID = int32(input.User.ID)
+
 	slugTitle := fmt.Sprintf("%s %d", input.Name, input.User.ID)
 	campaign.Slug = slug.Make(slugTitle)
 
 	campaignData, err := s.repository.Save(campaign)
 	if err != nil {
 		return campaignData, err
+	}
+	return campaignData, nil
+}
+
+func (s *service) UpdateCampaign(input CampaignDetailInput, inputData CampaignCreateInput) (Campaign, error) {
+	campaign, err := s.repository.FindByID(input.ID)
+	if err != nil {
+		return campaign, err
+	}
+
+	if int32(inputData.User.ID) != campaign.UserID {
+		return campaign, errors.New("Not an owner of the campaign")
+	}
+
+	campaign.Name = inputData.Name
+	campaign.ShortDescription = inputData.ShortDescription
+	campaign.Description = inputData.Description
+	campaign.Perks = inputData.Perks
+	campaign.GoalAmount = inputData.GoalAmount
+
+	slugTitle := fmt.Sprintf("%s %d", inputData.Name, inputData.User.ID)
+	campaign.Slug = slug.Make(slugTitle)
+
+	campaignData, err := s.repository.Update(campaign)
+	if err != nil {
+		return campaign, err
 	}
 	return campaignData, nil
 }
