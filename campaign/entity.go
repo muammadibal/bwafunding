@@ -24,7 +24,7 @@ type Campaign struct {
 
 type CampaignImage struct {
 	ID         int
-	CampaignId int32
+	CampaignID int32
 	FileName   string `gorm:"type:varchar(255)"`
 	IsPrimary  int8
 	CreatedAt  time.Time
