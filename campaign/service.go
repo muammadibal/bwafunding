@@ -57,8 +57,8 @@ func (s *service) UpdateCampaign(input CampaignDetailInput, inputData CampaignCr
 	campaign.Perks = inputData.Perks
 	campaign.GoalAmount = inputData.GoalAmount
 
-	slugTitle := fmt.Sprintf("%s %d", inputData.Name, inputData.User.ID)
-	campaign.Slug = slug.Make(slugTitle)
+	// slugTitle := fmt.Sprintf("%s %d", inputData.Name, inputData.User.ID)
+	// campaign.Slug = slug.Make(slugTitle)
 
 	campaignData, err := s.repository.Update(campaign)
 	if err != nil {
