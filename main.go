@@ -4,6 +4,7 @@ import (
 	"bwafunding/auth"
 	"bwafunding/campaign"
 	"bwafunding/handler"
+	"bwafunding/transaction"
 	"bwafunding/user"
 	"log"
 
@@ -35,6 +36,9 @@ func main() {
 	campaignService := campaign.AssignService(campaignRepository)
 	campaignHandler := handler.AssignCampaignHandler(campaignService)
 
+	transactionRepository := transaction.AssignRepository(db)
+	transactionService := transaction.AssignService(transactionRepository, campaignRepository)
+	transactionHandler := handler.AssignTransactionHandler(transactionService)
 	// input := campaign.CampaignCreateInput{}
 	// input.Name = "Penggalangan Dana Startup"
 	// input.ShortDescription = "short"
@@ -68,11 +72,14 @@ func main() {
 	apiV1.POST("/users/email_checkers", userHandler.CheckAvailabilityEmail)
 	apiV1.POST("/users/upload_avatar", handler.AuthMiddleware(authService, userService), userHandler.UploadAvatar)
 	apiV1.GET("/users/fetch", userHandler.FetchUser)
-	apiV1.POST("/campaigns", handler.AuthMiddleware(authService, userService), campaignHandler.CreateCampaign)
+
 	apiV1.GET("/campaigns", campaignHandler.Campaigns)
+	apiV1.POST("/campaigns", handler.AuthMiddleware(authService, userService), campaignHandler.CreateCampaign)
 	apiV1.GET("/campaigns/:id", campaignHandler.CampaignsDetail)
 	apiV1.PUT("/campaigns/:id", handler.AuthMiddleware(authService, userService), campaignHandler.UpdateCampaign)
 	apiV1.POST("/campaign-images", handler.AuthMiddleware(authService, userService), campaignHandler.UploadImage)
+
+	apiV1.GET("/campaigns/:id/transactions", handler.AuthMiddleware(authService, userService), transactionHandler.CampaignTransactions)
 
 	router.Run()
 }
