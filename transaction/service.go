@@ -12,6 +12,7 @@ type service struct {
 
 type Service interface {
 	TransactionsByCampaignID(input TransactionDetailInput) ([]Transaction, error)
+	TransactionsByUserID(userID int) ([]Transaction, error)
 }
 
 func AssignService(repository Repository, campaignRepository campaign.Repository) *service {
@@ -32,5 +33,15 @@ func (s *service) TransactionsByCampaignID(input TransactionDetailInput) ([]Tran
 	if err != nil {
 		return transactions, err
 	}
+	return transactions, nil
+}
+
+func (s service) TransactionsByUserID(userID int) ([]Transaction, error) {
+	transactions, err := s.repository.FindByUserID(userID)
+
+	if err != nil {
+		return transactions, err
+	}
+
 	return transactions, nil
 }

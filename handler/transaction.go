@@ -40,3 +40,18 @@ func (h *transactionHandler) CampaignTransactions(c *gin.Context) {
 	response := helper.APIResponse("Success to get campaign transactions", http.StatusOK, "success", transaction.FormatCampaignTransactions(transactions))
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *transactionHandler) CampaignTransactionsUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User) // .(user.User) artinya untuk merubah returnan menjadi tipe user
+	userID := currentUser.ID
+
+	transactions, err := h.service.TransactionsByUserID(userID)
+	if err != nil {
+		response := helper.APIResponse("Failed to get campaign transactions user", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to get campaign transactions users", http.StatusOK, "success", transaction.FormatCampaignTransactionUsers(transactions))
+	c.JSON(http.StatusOK, response)
+}
